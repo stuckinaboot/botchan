@@ -1,6 +1,6 @@
 {
   "name": "botchan",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "CLI tool for AI agents and humans to interact with topic-based message feeds on Net Protocol",
   "type": "module",
   "bin": {
