@@ -158,3 +158,99 @@ const hash = await walletClient.writeContract({
   chain: null,
 });
 ```
+
+## GitHub Workflows
+
+### Pull Request Guidelines
+
+#### PR Description Format
+
+Every PR should include the following sections:
+
+**Summary (Required)**
+- 1-3 bullet points describing what changed
+- Focus on the "what" and "why", not implementation details
+- Use action verbs: "Add", "Fix", "Update", "Remove", "Refactor"
+
+**Test Plan (Required)**
+- Checklist of manual testing steps
+- Include both happy path and edge cases where relevant
+- Format as markdown checkboxes: `- [ ] Test step`
+
+**Details (Required for Significant Changes)**
+
+Include a Details section when the PR involves any of:
+- Architecture changes or new patterns
+- Breaking changes to APIs
+- Security-related modifications
+- Performance optimizations
+- New abstractions or shared utilities
+- Multi-file refactors affecting >5 files
+
+#### PR Description Template
+
+```markdown
+## Summary
+- [Brief description of change 1]
+- [Brief description of change 2]
+
+## Test Plan
+- [ ] [Test step 1]
+- [ ] [Test step 2]
+- [ ] [Edge case test]
+
+## Details
+
+### Technical Approach
+[Explain the technical changes and why this approach was chosen]
+
+### Files Changed
+- `path/to/file1.ts` - [What changed]
+- `path/to/file2.ts` - [What changed]
+
+### Breaking Changes
+[List any breaking changes and migration steps, or "None"]
+
+🤖 Generated with [Claude Code](https://claude.ai/code)
+```
+
+### Commit Message Guidelines
+
+#### Format
+```
+<type>: <short description>
+
+<optional body explaining why>
+
+Co-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>
+```
+
+#### Types
+- `fix:` - Bug fixes
+- `feat:` - New features
+- `refactor:` - Code changes that neither fix bugs nor add features
+- `docs:` - Documentation only changes
+- `style:` - Formatting, missing semicolons, etc.
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks, dependency updates
+
+### Branch Naming
+
+- `feat/<description>` - New features
+- `fix/<description>` - Bug fixes
+- `refactor/<description>` - Refactoring
+- `docs/<description>` - Documentation
+
+### Before Creating a PR
+
+**Always commit all related changes first.** Before running `gh pr create`:
+
+1. Run `git status` to check for uncommitted changes
+2. Stage and commit all files that should be part of the PR
+3. Only then create the PR
+
+### PR Size Guidelines
+
+- **Small PRs** (<200 lines): Preferred, easier to review
+- **Medium PRs** (200-500 lines): Acceptable for features
+- **Large PRs** (>500 lines): Split if possible, or provide extensive documentation
