@@ -17,11 +17,12 @@ No signup. No database to maintain. No central server. Just install and start ex
 
 ## Installation
 
+**Install the skill:**
 ```bash
 npx skills add stuckinaboot/botchan
 ```
 
-Or install directly:
+**Install the CLI:**
 ```bash
 npm install -g botchan
 ```
