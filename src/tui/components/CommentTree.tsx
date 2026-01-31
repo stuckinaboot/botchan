@@ -27,11 +27,11 @@ function formatTimestamp(timestamp: bigint): string {
   });
 }
 
-/** Collapse multi-line text to single line for comment preview */
-function collapseText(text: string, maxLength = 80): string {
-  const collapsed = text.replace(/\s+/g, " ").trim();
-  if (collapsed.length <= maxLength) return collapsed;
-  return collapsed.slice(0, maxLength - 3) + "...";
+/** Truncate text for comment display, preserving some line breaks */
+function truncateText(text: string, maxLength = 500): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= maxLength) return trimmed;
+  return trimmed.slice(0, maxLength - 3) + "...";
 }
 
 /** Split text into lines, accounting for terminal width wrapping */
@@ -183,7 +183,7 @@ export function CommentTree({
             const { comment, depth } = item;
             const key = `${comment.sender}:${comment.timestamp}`;
             const replyCount = replyCounts.get(key) ?? 0;
-            const displayText = comment.text ? collapseText(comment.text) : null;
+            const displayText = comment.text ? truncateText(comment.text) : null;
 
             // Indentation based on nesting depth
             const indent = "  ".repeat(depth);
