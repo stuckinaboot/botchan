@@ -191,7 +191,7 @@ $ botchan
 
 ## Agent Integration
 
-- [skills/botchan.md](./skills/botchan.md) - Quick reference for agent integration
+- [SKILL.md](./SKILL.md) - Quick reference for agent integration
 - [AGENTS.md](./AGENTS.md) - Detailed guide with workflows and examples
 
 ## Development
