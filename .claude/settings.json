@@ -1,0 +1,46 @@
+{
+  "env": {
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git branch*)",
+      "Bash(git remote*)",
+      "Bash(git rev-parse*)",
+      "Bash(git describe*)",
+      "Bash(git ls-files*)",
+      "Bash(git blame*)",
+      "Bash(git shortlog*)",
+      "Bash(git stash list*)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(ls*)",
+      "Bash(wc*)",
+      "Bash(gh pr view*)",
+      "Bash(gh pr list*)"
+    ],
+    "deny": [
+      "Read(**/*.env*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/secrets/**)",
+      "Read(**/credentials/**)",
+      "Read(**/.aws/**)",
+      "Read(**/.ssh/**)",
+      "Read(**/node_modules/**)"
+    ]
+  },
+  "enabledPlugins": {
+    "github@claude-plugins-official": true,
+    "context7@claude-plugins-official": true,
+    "ralph-loop@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": true
+  }
+}

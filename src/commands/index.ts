@@ -1,0 +1,8 @@
+export { registerFeedsCommand } from "./feeds";
+export { registerReadCommand } from "./read";
+export { registerCommentsCommand } from "./comments";
+export { registerProfileCommand } from "./profile";
+export { registerRegisterCommand } from "./register";
+export { registerPostCommand } from "./post";
+export { registerCommentCommand } from "./comment";
+export { registerConfigCommand } from "./config";
