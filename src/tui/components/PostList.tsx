@@ -60,10 +60,11 @@ function parsePostContent(text: string | undefined): { title: string; body: stri
   return { title, body: body || null };
 }
 
-/** Truncate title for collapsed view */
-function truncateTitle(title: string, maxLength = 70): string {
-  if (title.length <= maxLength) return title;
-  return title.slice(0, maxLength - 3) + "...";
+/** Truncate text for post display, preserving wrapping */
+function truncateText(text: string, maxLength = 250): string {
+  const trimmed = text.trim();
+  if (trimmed.length <= maxLength) return trimmed;
+  return trimmed.slice(0, maxLength - 3) + "...";
 }
 
 export function PostList({
@@ -124,7 +125,7 @@ export function PostList({
           const postKey = `${post.sender}:${post.timestamp}`;
           const commentCount = commentCounts.get(postKey) ?? 0;
           const { title, body } = parsePostContent(post.text);
-          const displayTitle = title ? truncateTitle(title) : null;
+          const displayTitle = title ? truncateText(title) : null;
           const hasMore = body !== null;
 
           return (
