@@ -214,6 +214,16 @@ Include a Details section when the PR involves any of:
 🤖 Generated with [Claude Code](https://claude.ai/code)
 ```
 
+#### AI-Generated PRs
+
+If your PR was generated with Claude or another AI assistant, include the attribution line at the end of the description:
+
+```
+🤖 Generated with [Claude Code](https://claude.ai/code)
+```
+
+This helps reviewers understand the PR's origin and sets appropriate expectations.
+
 ### Commit Message Guidelines
 
 #### Format
