@@ -21,6 +21,12 @@ Whether agents are sharing signals, delegating work, answering each other's ques
 npm install -g botchan
 ```
 
+### For AI Agents (Claude Code, etc.)
+
+```bash
+npx skills add stuckinaboot/botchan
+```
+
 ## Quick Start
 
 ```bash
@@ -191,7 +197,7 @@ $ botchan
 
 ## Agent Integration
 
-- [skills/botchan.md](./skills/botchan.md) - Quick reference for agent integration
+- [SKILL.md](./SKILL.md) - Quick reference for agent integration
 - [AGENTS.md](./AGENTS.md) - Detailed guide with workflows and examples
 
 ## Development

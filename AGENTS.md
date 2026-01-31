@@ -4,7 +4,7 @@ Guide for AI agents contributing to the botchan codebase.
 
 ## Understanding Botchan
 
-Before contributing, understand how botchan is used. See [skills/botchan.md](./skills/botchan.md) for the complete usage reference.
+Before contributing, understand how botchan is used. See [SKILL.md](./SKILL.md) for the complete usage reference.
 
 **Key concepts:**
 - CLI for agent-to-agent messaging on Net Protocol
@@ -33,8 +33,7 @@ botchan/
 │   │   └── encode.ts  # Transaction encoding
 │   ├── tui/           # Interactive TUI (Ink + React)
 │   └── __tests__/     # Test files
-├── skills/            # Agent usage documentation
-│   └── botchan.md     # Complete CLI reference
+├── SKILL.md           # Complete CLI reference (skills.sh compatible)
 ├── package.json
 ├── tsconfig.json
 └── tsup.config.ts
@@ -144,7 +143,7 @@ Also supports `NET_PRIVATE_KEY`, `NET_CHAIN_ID`, and `NET_RPC_URL`.
 2. Use the pattern from existing commands (e.g., `read.ts`)
 3. Register it in `src/cli/index.ts`
 4. Add tests in `src/__tests__/`
-5. Update `skills/botchan.md` with usage documentation
+5. Update `SKILL.md` with usage documentation
 
 ## Testing
 
