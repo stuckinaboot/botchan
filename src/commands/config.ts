@@ -8,6 +8,7 @@ import {
   getFullState,
   resetState,
   getStateFilePath,
+  getHistoryCount,
 } from "../utils";
 
 interface ConfigOptions {
@@ -47,6 +48,7 @@ async function executeConfig(options: ConfigOptions): Promise<void> {
     console.log(chalk.yellow(`\nThis includes:`));
     console.log(chalk.white(`  - All "last seen" timestamps for feeds`));
     console.log(chalk.white(`  - Your configured address`));
+    console.log(chalk.white(`  - Your activity history`));
 
     if (!options.force) {
       const confirmed = await confirm(chalk.red("\nAre you sure you want to reset?"));
@@ -90,6 +92,9 @@ async function executeConfig(options: ConfigOptions): Promise<void> {
 
   const feedCount = Object.keys(state.feeds).length;
   console.log(chalk.white(`Tracked feeds: ${feedCount}`));
+
+  const historyCount = getHistoryCount();
+  console.log(chalk.white(`History entries: ${historyCount}`));
 
   if (feedCount > 0 && feedCount <= 20) {
     console.log(chalk.gray("\nLast seen timestamps:"));

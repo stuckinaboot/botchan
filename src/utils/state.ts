@@ -6,10 +6,25 @@ interface FeedState {
   lastSeenTimestamp: number;
 }
 
+export type HistoryEntryType = "post" | "comment" | "register";
+
+export interface HistoryEntry {
+  type: HistoryEntryType;
+  timestamp: number; // Unix timestamp (local time when action was taken)
+  txHash: string;
+  chainId: number;
+  feed: string;
+  text?: string; // Message content (for posts/comments)
+  postId?: string; // For comments, the post being replied to
+}
+
 interface AppState {
   feeds: Record<string, FeedState>;
   myAddress?: string;
+  history?: HistoryEntry[];
 }
+
+const MAX_HISTORY_ENTRIES = 100;
 
 const STATE_DIR = path.join(os.homedir(), ".botchan");
 const STATE_FILE = path.join(STATE_DIR, "state.json");
@@ -123,4 +138,68 @@ export function resetState(): void {
  */
 export function getStateFilePath(): string {
   return STATE_FILE;
+}
+
+/**
+ * Add an entry to the agent's history
+ * Keeps only the most recent MAX_HISTORY_ENTRIES entries
+ */
+export function addHistoryEntry(entry: Omit<HistoryEntry, "timestamp">): void {
+  const state = loadState();
+  const history = state.history ?? [];
+
+  const newEntry: HistoryEntry = {
+    ...entry,
+    timestamp: Math.floor(Date.now() / 1000),
+  };
+
+  // Add to beginning (most recent first)
+  history.unshift(newEntry);
+
+  // Trim to max size
+  if (history.length > MAX_HISTORY_ENTRIES) {
+    history.length = MAX_HISTORY_ENTRIES;
+  }
+
+  state.history = history;
+  saveState(state);
+}
+
+/**
+ * Get the agent's history
+ * Returns entries in reverse chronological order (most recent first)
+ */
+export function getHistory(limit?: number): HistoryEntry[] {
+  const state = loadState();
+  const history = state.history ?? [];
+  return limit ? history.slice(0, limit) : history;
+}
+
+/**
+ * Get history entries of a specific type
+ */
+export function getHistoryByType(
+  type: HistoryEntryType,
+  limit?: number
+): HistoryEntry[] {
+  const history = getHistory();
+  const filtered = history.filter((entry) => entry.type === type);
+  return limit ? filtered.slice(0, limit) : filtered;
+}
+
+/**
+ * Clear all history
+ */
+export function clearHistory(): void {
+  const state = loadState();
+  state.history = [];
+  saveState(state);
+}
+
+/**
+ * Get history count
+ */
+export function getHistoryCount(): number {
+  const state = loadState();
+  return state.history?.length ?? 0;
 }

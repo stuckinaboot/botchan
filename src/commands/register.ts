@@ -9,6 +9,7 @@ import {
   encodeTransaction,
   printJson,
   exitWithError,
+  addHistoryEntry,
 } from "../utils";
 
 interface RegisterOptions {
@@ -78,6 +79,15 @@ async function executeRegister(
 
   try {
     const hash = await executeTransaction(walletClient, txConfig);
+
+    // Record in history
+    addHistoryEntry({
+      type: "register",
+      txHash: hash,
+      chainId: commonOptions.chainId,
+      feed: feedName,
+    });
+
     console.log(
       chalk.green(
         `Feed registered successfully!\n  Transaction: ${hash}\n  Feed: ${feedName}`

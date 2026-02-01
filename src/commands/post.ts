@@ -10,6 +10,7 @@ import {
   printJson,
   exitWithError,
   normalizeFeedName,
+  addHistoryEntry,
 } from "../utils";
 
 interface PostOptions {
@@ -95,6 +96,16 @@ async function executePost(
 
   try {
     const hash = await executeTransaction(walletClient, txConfig);
+
+    // Record in history
+    addHistoryEntry({
+      type: "post",
+      txHash: hash,
+      chainId: commonOptions.chainId,
+      feed: normalizedFeed,
+      text: fullMessage,
+    });
+
     const displayText = options.body
       ? `${message} (+ body)`
       : message;

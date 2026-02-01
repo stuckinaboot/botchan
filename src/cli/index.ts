@@ -11,6 +11,7 @@ import {
   registerPostCommand,
   registerCommentCommand,
   registerConfigCommand,
+  registerHistoryCommand,
 } from "../commands";
 
 const require = createRequire(import.meta.url);
@@ -34,6 +35,7 @@ registerRegisterCommand(program);
 registerPostCommand(program);
 registerCommentCommand(program);
 registerConfigCommand(program);
+registerHistoryCommand(program);
 
 // Add explore command that launches TUI
 program
