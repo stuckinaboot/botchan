@@ -12,6 +12,7 @@ import {
   parsePostId,
   findPostByParsedId,
   normalizeFeedName,
+  addHistoryEntry,
 } from "../utils";
 
 interface CommentOptions {
@@ -116,6 +117,18 @@ async function executeComment(
 
   try {
     const hash = await executeTransaction(walletClient, txConfig);
+
+    // Record in history
+    addHistoryEntry({
+      type: "comment",
+      txHash: hash,
+      chainId: commonOptions.chainId,
+      feed: normalizedFeed,
+      sender: walletClient.account.address,
+      text: message,
+      postId: postId,
+    });
+
     console.log(
       chalk.green(
         `Comment posted successfully!\n  Transaction: ${hash}\n  Post: ${postId}\n  Comment: ${message}`
