@@ -204,3 +204,115 @@ export function getHistoryCount(): number {
   const state = loadState();
   return state.history?.length ?? 0;
 }
+
+/**
+ * Check if a feed name is a wallet address (i.e., a direct message)
+ */
+export function isWalletAddress(feed: string): boolean {
+  return /^0x[a-fA-F0-9]{40}$/.test(feed);
+}
+
+/**
+ * Contact info derived from history
+ */
+export interface Contact {
+  address: string;
+  lastInteraction: number;
+  interactionCount: number;
+  firstInteraction: number;
+}
+
+/**
+ * Get contacts - wallet addresses you've posted to (DMs)
+ * Returns contacts sorted by last interaction (most recent first)
+ */
+export function getContacts(): Contact[] {
+  const history = getHistory();
+  const contactMap = new Map<string, Contact>();
+
+  // Only look at posts (not comments) to wallet addresses
+  for (const entry of history) {
+    if (entry.type === "post" && isWalletAddress(entry.feed)) {
+      const address = entry.feed.toLowerCase();
+      const existing = contactMap.get(address);
+
+      if (existing) {
+        existing.interactionCount++;
+        // Update first/last interaction times
+        if (entry.timestamp > existing.lastInteraction) {
+          existing.lastInteraction = entry.timestamp;
+        }
+        if (entry.timestamp < existing.firstInteraction) {
+          existing.firstInteraction = entry.timestamp;
+        }
+      } else {
+        contactMap.set(address, {
+          address,
+          lastInteraction: entry.timestamp,
+          firstInteraction: entry.timestamp,
+          interactionCount: 1,
+        });
+      }
+    }
+  }
+
+  // Sort by last interaction (most recent first)
+  return Array.from(contactMap.values()).sort(
+    (a, b) => b.lastInteraction - a.lastInteraction
+  );
+}
+
+/**
+ * Feed activity info derived from history
+ */
+export interface FeedActivity {
+  feed: string;
+  postCount: number;
+  commentCount: number;
+  lastActivity: number;
+  firstActivity: number;
+}
+
+/**
+ * Get feeds the agent has been active in
+ * Returns feeds sorted by last activity (most recent first)
+ * Excludes wallet addresses (those are contacts, not feeds)
+ */
+export function getActiveFeeds(): FeedActivity[] {
+  const history = getHistory();
+  const feedMap = new Map<string, FeedActivity>();
+
+  for (const entry of history) {
+    // Skip wallet addresses - those are contacts
+    if (isWalletAddress(entry.feed)) continue;
+    // Skip feed registrations - only count actual posts/comments
+    if (entry.type === "register") continue;
+
+    const feedName = entry.feed.toLowerCase();
+    const existing = feedMap.get(feedName);
+
+    if (existing) {
+      if (entry.type === "post") existing.postCount++;
+      if (entry.type === "comment") existing.commentCount++;
+      if (entry.timestamp > existing.lastActivity) {
+        existing.lastActivity = entry.timestamp;
+      }
+      if (entry.timestamp < existing.firstActivity) {
+        existing.firstActivity = entry.timestamp;
+      }
+    } else {
+      feedMap.set(feedName, {
+        feed: feedName,
+        postCount: entry.type === "post" ? 1 : 0,
+        commentCount: entry.type === "comment" ? 1 : 0,
+        lastActivity: entry.timestamp,
+        firstActivity: entry.timestamp,
+      });
+    }
+  }
+
+  // Sort by last activity (most recent first)
+  return Array.from(feedMap.values()).sort(
+    (a, b) => b.lastActivity - a.lastActivity
+  );
+}
