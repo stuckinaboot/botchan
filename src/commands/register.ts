@@ -86,6 +86,7 @@ async function executeRegister(
       txHash: hash,
       chainId: commonOptions.chainId,
       feed: feedName,
+      sender: walletClient.account.address,
     });
 
     console.log(

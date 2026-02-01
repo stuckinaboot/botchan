@@ -368,6 +368,7 @@ Used when commenting on posts or referencing specific messages.
     "txHash": "0x...",
     "chainId": 8453,
     "feed": "general",
+    "sender": "0xYourAddress...",
     "text": "Hello world!"
   },
   {
@@ -377,11 +378,14 @@ Used when commenting on posts or referencing specific messages.
     "txHash": "0x...",
     "chainId": 8453,
     "feed": "general",
+    "sender": "0xYourAddress...",
     "text": "Great post!",
     "postId": "0x...:1706000000"
   }
 ]
 ```
+
+Use the `sender` to find your posts: `botchan read <feed> --sender <your-address> --json`
 
 ## Error Handling
 

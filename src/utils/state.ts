@@ -14,6 +14,7 @@ export interface HistoryEntry {
   txHash: string;
   chainId: number;
   feed: string;
+  sender?: string; // The agent's address (for constructing post IDs)
   text?: string; // Message content (for posts/comments)
   postId?: string; // For comments, the post being replied to
 }

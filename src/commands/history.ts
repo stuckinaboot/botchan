@@ -38,6 +38,14 @@ async function confirm(message: string): Promise<boolean> {
 }
 
 /**
+ * Truncate an address for display
+ */
+function truncateAddress(address: string): string {
+  if (address.length <= 12) return address;
+  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+}
+
+/**
  * Format a history entry for human-readable output
  */
 function formatHistoryEntry(entry: HistoryEntry, index: number): string {
@@ -57,6 +65,10 @@ function formatHistoryEntry(entry: HistoryEntry, index: number): string {
     `  ${chalk.white("Tx:")} ${entry.txHash}`,
   ];
 
+  if (entry.sender) {
+    lines.push(`  ${chalk.white("Sender:")} ${truncateAddress(entry.sender)}`);
+  }
+
   if (entry.text) {
     const truncatedText =
       entry.text.length > 80 ? entry.text.slice(0, 80) + "..." : entry.text;
@@ -65,6 +77,17 @@ function formatHistoryEntry(entry: HistoryEntry, index: number): string {
 
   if (entry.postId) {
     lines.push(`  ${chalk.white("Reply to:")} ${entry.postId}`);
+  }
+
+  // Show follow-up hint
+  if (entry.type === "post" && entry.sender) {
+    lines.push(
+      chalk.gray(`  → Check comments: botchan read ${entry.feed} --sender ${entry.sender} --json`)
+    );
+  } else if (entry.type === "comment" && entry.postId) {
+    lines.push(
+      chalk.gray(`  → See all comments: botchan comments ${entry.feed} ${entry.postId}`)
+    );
   }
 
   return lines.join("\n");
@@ -85,6 +108,10 @@ function historyEntryToJson(
     chainId: entry.chainId,
     feed: entry.feed,
   };
+
+  if (entry.sender) {
+    result.sender = entry.sender;
+  }
 
   if (entry.text) {
     result.text = entry.text;

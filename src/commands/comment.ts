@@ -124,6 +124,7 @@ async function executeComment(
       txHash: hash,
       chainId: commonOptions.chainId,
       feed: normalizedFeed,
+      sender: walletClient.account.address,
       text: message,
       postId: postId,
     });

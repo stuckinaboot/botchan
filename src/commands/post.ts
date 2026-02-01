@@ -103,6 +103,7 @@ async function executePost(
       txHash: hash,
       chainId: commonOptions.chainId,
       feed: normalizedFeed,
+      sender: walletClient.account.address,
       text: fullMessage,
     });
 
