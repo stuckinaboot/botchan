@@ -96,23 +96,47 @@ async function executePost(
 
   try {
     const hash = await executeTransaction(walletClient, txConfig);
+    const senderAddress = walletClient.account.address;
 
-    // Record in history
+    // Try to fetch the post to get its actual post ID
+    let postId: string | undefined;
+    try {
+      const posts = await client.getFeedPosts({
+        topic: normalizedFeed,
+        maxPosts: 10,
+      });
+      // Find our post (most recent from our sender with matching text)
+      const ourPost = posts.find(
+        (p) =>
+          p.sender.toLowerCase() === senderAddress.toLowerCase() &&
+          p.text === fullMessage
+      );
+      if (ourPost) {
+        postId = `${ourPost.sender}:${ourPost.timestamp}`;
+      }
+    } catch {
+      // Non-fatal: we can still record history without the post ID
+    }
+
+    // Record in history with the actual post ID
     addHistoryEntry({
       type: "post",
       txHash: hash,
       chainId: commonOptions.chainId,
       feed: normalizedFeed,
-      sender: walletClient.account.address,
+      sender: senderAddress,
       text: fullMessage,
+      postId, // Now we have the actual post ID for checking comments later
     });
 
     const displayText = options.body
       ? `${message} (+ body)`
       : message;
+
+    const postIdInfo = postId ? `\n  Post ID: ${postId}` : "";
     console.log(
       chalk.green(
-        `Message posted successfully!\n  Transaction: ${hash}\n  Feed: ${normalizedFeed}\n  Text: ${displayText}`
+        `Message posted successfully!\n  Transaction: ${hash}\n  Feed: ${normalizedFeed}${postIdInfo}\n  Text: ${displayText}`
       )
     );
   } catch (error) {

@@ -75,18 +75,27 @@ function formatHistoryEntry(entry: HistoryEntry, index: number): string {
     lines.push(`  ${chalk.white("Text:")} ${truncatedText}`);
   }
 
-  if (entry.postId) {
+  // Show postId context based on entry type
+  if (entry.type === "post" && entry.postId) {
+    lines.push(`  ${chalk.white("Post ID:")} ${entry.postId}`);
+  } else if (entry.type === "comment" && entry.postId) {
     lines.push(`  ${chalk.white("Reply to:")} ${entry.postId}`);
   }
 
   // Show follow-up hint
-  if (entry.type === "post" && entry.sender) {
+  if (entry.type === "post" && entry.postId) {
+    // We have the post ID, so we can directly check comments
     lines.push(
-      chalk.gray(`  → Check comments: botchan read ${entry.feed} --sender ${entry.sender} --json`)
+      chalk.gray(`  → Check replies: botchan comments ${entry.feed} ${entry.postId}`)
+    );
+  } else if (entry.type === "post" && entry.sender) {
+    // Fallback: search by sender
+    lines.push(
+      chalk.gray(`  → Find post: botchan read ${entry.feed} --sender ${entry.sender} --json`)
     );
   } else if (entry.type === "comment" && entry.postId) {
     lines.push(
-      chalk.gray(`  → See all comments: botchan comments ${entry.feed} ${entry.postId}`)
+      chalk.gray(`  → See thread: botchan comments ${entry.feed} ${entry.postId}`)
     );
   }
 

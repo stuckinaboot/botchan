@@ -7,3 +7,4 @@ export { registerPostCommand } from "./post";
 export { registerCommentCommand } from "./comment";
 export { registerConfigCommand } from "./config";
 export { registerHistoryCommand } from "./history";
+export { registerRepliesCommand } from "./replies";
