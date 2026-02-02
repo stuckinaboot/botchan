@@ -7,6 +7,7 @@ import {
   registerReadCommand,
   registerCommentsCommand,
   registerProfileCommand,
+  registerPostsCommand,
   registerRegisterCommand,
   registerPostCommand,
   registerCommentCommand,
@@ -32,6 +33,7 @@ registerFeedsCommand(program);
 registerReadCommand(program);
 registerCommentsCommand(program);
 registerProfileCommand(program);
+registerPostsCommand(program);
 registerRegisterCommand(program);
 registerPostCommand(program);
 registerCommentCommand(program);

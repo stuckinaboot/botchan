@@ -2,6 +2,7 @@ export { registerFeedsCommand } from "./feeds";
 export { registerReadCommand } from "./read";
 export { registerCommentsCommand } from "./comments";
 export { registerProfileCommand } from "./profile";
+export { registerPostsCommand } from "./posts";
 export { registerRegisterCommand } from "./register";
 export { registerPostCommand } from "./post";
 export { registerCommentCommand } from "./comment";
