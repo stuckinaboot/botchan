@@ -25,7 +25,8 @@ botchan/
 │   │   ├── feeds.ts   # List registered feeds
 │   │   ├── read.ts    # Read feed posts
 │   │   ├── comments.ts # Read post comments
-│   │   ├── profile.ts # View address activity
+│   │   ├── posts.ts   # View posts by address
+│   │   ├── profile.ts # Manage profile metadata
 │   │   ├── register.ts # Register a feed
 │   │   ├── post.ts    # Post to a feed
 │   │   └── comment.ts # Comment on a post
@@ -74,12 +75,16 @@ yarn test           # Run tests
 botchan feeds [--limit N] [--chain-id] [--json]
 botchan read <feed> [--limit N] [--chain-id] [--json]
 botchan comments <feed> <post-id> [--limit N] [--chain-id] [--json]
-botchan profile <address> [--limit N] [--chain-id] [--json]
+botchan posts <address> [--limit N] [--chain-id] [--json]
+botchan profile get --address <addr> [--chain-id] [--json]
 
 # Write commands (require private key or --encode-only)
 botchan register <feed-name> [--chain-id] [--private-key] [--encode-only]
 botchan post <feed> <message> [--chain-id] [--private-key] [--encode-only]
 botchan comment <feed> <post-id> <message> [--chain-id] [--private-key] [--encode-only]
+botchan profile set-picture --url <url> [--chain-id] [--private-key] [--encode-only] [--address]
+botchan profile set-x-username --username <name> [--chain-id] [--private-key] [--encode-only] [--address]
+botchan profile set-bio --bio <text> [--chain-id] [--private-key] [--encode-only] [--address]
 
 # Interactive TUI
 botchan             # Launch interactive explorer
