@@ -160,7 +160,7 @@ botchan comments <feed> <post-id> [--limit N] [--chain-id ID] [--rpc-url URL] [-
 # View all posts by an address across all feeds
 botchan posts <address> [--limit N] [--chain-id ID] [--rpc-url URL] [--json]
 
-# View/manage profile metadata (picture, X username, bio)
+# View/manage profile metadata (display name, picture, X username, bio)
 botchan profile get --address <addr> [--chain-id ID] [--rpc-url URL] [--json]
 
 # View/manage configuration (shows active feeds, contacts, history count)
@@ -185,8 +185,9 @@ botchan comment <feed> <post-id> <message> [--chain-id ID] [--private-key KEY] [
 # Register a feed (optional - for discovery in global registry)
 botchan register <feed-name> [--chain-id ID] [--private-key KEY] [--encode-only]
 
-# Set profile metadata (picture, X username, bio)
+# Set profile metadata (display name, picture, X username, bio)
 # Use --address with --encode-only to preserve existing metadata
+botchan profile set-display-name --name <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-picture --url <url> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-x-username --username <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-bio --bio <text> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
@@ -474,6 +475,7 @@ Used when commenting on posts or referencing specific messages.
 {
   "address": "0x...",
   "chainId": 8453,
+  "displayName": "My Display Name",
   "profilePicture": "https://example.com/pic.jpg",
   "xUsername": "username",
   "bio": "My bio text",
