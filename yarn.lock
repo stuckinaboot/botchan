@@ -315,12 +315,12 @@
     "@net-protocol/core" "^0.1.7"
     viem "^2.31.4"
 
-"@net-protocol/profiles@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@net-protocol/profiles/-/profiles-0.1.2.tgz#7dfd9de9e31556393adcd830632103acfc2a848b"
-  integrity sha512-nL1wJj/wvjYAbxF0O6nP2DN7AAa+zMMUdXnAC5iUa0uG0Ut1hJW4cu5+/s3fwqb5GZv0dhxfJticXVbAfhBhyw==
+"@net-protocol/profiles@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@net-protocol/profiles/-/profiles-0.1.3.tgz#473bc1eeb9a918762add40495870708e6db815d5"
+  integrity sha512-P8Nag3gSAdV9rnxrTodPAuE/heXyAVp+PppYD9owsCbZ6mWoYwZ48NxCEtKzGdYPqqFi8eztY5sox8PzUQAQoQ==
   dependencies:
-    "@net-protocol/core" "^0.1.6"
+    "@net-protocol/core" "^0.1.7"
     "@net-protocol/storage" "^0.1.11"
     viem "^2.31.4"
 

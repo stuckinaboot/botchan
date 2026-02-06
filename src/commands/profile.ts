@@ -13,6 +13,7 @@ import {
   isValidUrl,
   isValidXUsername,
   isValidBio,
+  isValidDisplayName,
   STORAGE_CONTRACT,
 } from "@net-protocol/profiles";
 import type { ReadOnlyOptions } from "../utils";
@@ -58,6 +59,15 @@ interface ProfileSetBioOptions {
   address?: string; // Optional address for encode-only mode to preserve existing metadata
 }
 
+interface ProfileSetDisplayNameOptions {
+  displayName: string;
+  chainId?: number;
+  rpcUrl?: string;
+  privateKey?: string;
+  encodeOnly?: boolean;
+  address?: string; // Optional address for encode-only mode to preserve existing metadata
+}
+
 /**
  * Read existing profile metadata for an address
  * Returns { x_username, bio } or empty object if not found
@@ -65,7 +75,7 @@ interface ProfileSetBioOptions {
 async function readExistingMetadata(
   address: `0x${string}`,
   readOnlyOptions: ReadOnlyOptions
-): Promise<{ x_username?: string; bio?: string }> {
+): Promise<{ x_username?: string; bio?: string; display_name?: string }> {
   const client = createStorageClient(readOnlyOptions);
   try {
     const metadataResult = await client.readStorageData({
@@ -77,6 +87,7 @@ async function readExistingMetadata(
       return {
         x_username: metadata?.x_username,
         bio: metadata?.bio,
+        display_name: metadata?.display_name,
       };
     }
   } catch (error) {
@@ -125,9 +136,10 @@ async function executeProfileGet(options: ProfileGetOptions): Promise<void> {
       }
     }
 
-    // Fetch profile metadata (X username, bio)
+    // Fetch profile metadata (X username, bio, display name)
     let xUsername: string | undefined;
     let bio: string | undefined;
+    let displayName: string | undefined;
     try {
       const metadataResult = await client.readStorageData({
         key: PROFILE_METADATA_STORAGE_KEY,
@@ -137,6 +149,7 @@ async function executeProfileGet(options: ProfileGetOptions): Promise<void> {
         const metadata = parseProfileMetadata(metadataResult.data);
         xUsername = metadata?.x_username;
         bio = metadata?.bio;
+        displayName = metadata?.display_name;
       }
     } catch (error) {
       // Not found is okay
@@ -147,12 +160,13 @@ async function executeProfileGet(options: ProfileGetOptions): Promise<void> {
       }
     }
 
-    const hasProfile = !!(profilePicture || xUsername || bio);
+    const hasProfile = !!(profilePicture || xUsername || bio || displayName);
 
     if (options.json) {
       const output = {
         address: options.address,
         chainId: readOnlyOptions.chainId,
+        displayName: displayName || null,
         profilePicture: profilePicture || null,
         xUsername: xUsername || null,
         bio: bio || null,
@@ -166,6 +180,11 @@ async function executeProfileGet(options: ProfileGetOptions): Promise<void> {
     console.log(chalk.white.bold("\nProfile:\n"));
     console.log(`  ${chalk.cyan("Address:")} ${options.address}`);
     console.log(`  ${chalk.cyan("Chain ID:")} ${readOnlyOptions.chainId}`);
+    console.log(
+      `  ${chalk.cyan("Display Name:")} ${
+        displayName || chalk.gray("(not set)")
+      }`
+    );
     console.log(
       `  ${chalk.cyan("Profile Picture:")} ${
         profilePicture || chalk.gray("(not set)")
@@ -312,8 +331,9 @@ async function executeProfileSetXUsername(
 
   // Handle encode-only mode (no private key required)
   if (options.encodeOnly) {
-    // If address provided, read existing metadata to preserve bio
+    // If address provided, read existing metadata to preserve bio and display_name
     let existingBio: string | undefined;
+    let existingDisplayName: string | undefined;
     if (options.address) {
       if (!options.address.startsWith("0x") || options.address.length !== 42) {
         exitWithError("Invalid address format. Must be 0x-prefixed, 42 characters");
@@ -323,11 +343,13 @@ async function executeProfileSetXUsername(
         readOnlyOptions
       );
       existingBio = existing.bio;
+      existingDisplayName = existing.display_name;
     }
 
     const storageArgs = getProfileMetadataStorageArgs({
       x_username: usernameForStorage,
       bio: existingBio,
+      display_name: existingDisplayName,
     });
     const encoded = encodeTransaction(
       {
@@ -370,16 +392,20 @@ async function executeProfileSetXUsername(
     console.log(chalk.gray(`   Username: ${displayUsername}`));
     console.log(chalk.gray(`   Address: ${account.address}`));
 
-    // Read existing metadata to preserve bio
+    // Read existing metadata to preserve bio and display_name
     const existing = await readExistingMetadata(account.address, readOnlyOptions);
     if (existing.bio) {
       console.log(chalk.gray(`   Preserving existing bio`));
+    }
+    if (existing.display_name) {
+      console.log(chalk.gray(`   Preserving existing display name`));
     }
 
     // Get storage args with merged metadata
     const storageArgs = getProfileMetadataStorageArgs({
       x_username: usernameForStorage,
       bio: existing.bio,
+      display_name: existing.display_name,
     });
 
     // Submit transaction
@@ -434,8 +460,9 @@ async function executeProfileSetBio(
 
   // Handle encode-only mode (no private key required)
   if (options.encodeOnly) {
-    // If address provided, read existing metadata to preserve x_username
+    // If address provided, read existing metadata to preserve x_username and display_name
     let existingXUsername: string | undefined;
+    let existingDisplayName: string | undefined;
     if (options.address) {
       if (!options.address.startsWith("0x") || options.address.length !== 42) {
         exitWithError("Invalid address format. Must be 0x-prefixed, 42 characters");
@@ -445,11 +472,13 @@ async function executeProfileSetBio(
         readOnlyOptions
       );
       existingXUsername = existing.x_username;
+      existingDisplayName = existing.display_name;
     }
 
     const storageArgs = getProfileMetadataStorageArgs({
       bio: options.bio,
       x_username: existingXUsername,
+      display_name: existingDisplayName,
     });
     const encoded = encodeTransaction(
       {
@@ -492,16 +521,20 @@ async function executeProfileSetBio(
     console.log(chalk.gray(`   Bio: ${options.bio}`));
     console.log(chalk.gray(`   Address: ${account.address}`));
 
-    // Read existing metadata to preserve x_username
+    // Read existing metadata to preserve x_username and display_name
     const existing = await readExistingMetadata(account.address, readOnlyOptions);
     if (existing.x_username) {
       console.log(chalk.gray(`   Preserving existing X username`));
+    }
+    if (existing.display_name) {
+      console.log(chalk.gray(`   Preserving existing display name`));
     }
 
     // Get storage args with merged metadata
     const storageArgs = getProfileMetadataStorageArgs({
       bio: options.bio,
       x_username: existing.x_username,
+      display_name: existing.display_name,
     });
 
     // Submit transaction
@@ -536,12 +569,141 @@ async function executeProfileSetBio(
 }
 
 /**
+ * Execute the profile set-display-name command
+ */
+async function executeProfileSetDisplayName(
+  options: ProfileSetDisplayNameOptions
+): Promise<void> {
+  // Validate display name
+  if (!isValidDisplayName(options.displayName)) {
+    exitWithError(
+      `Invalid display name: "${options.displayName}". Display name must be non-empty and valid.`
+    );
+  }
+
+  // Parse read-only options for reading existing metadata
+  const readOnlyOptions = parseReadOnlyOptions({
+    chainId: options.chainId,
+    rpcUrl: options.rpcUrl,
+  });
+
+  // Handle encode-only mode (no private key required)
+  if (options.encodeOnly) {
+    // If address provided, read existing metadata to preserve x_username and bio
+    let existingXUsername: string | undefined;
+    let existingBio: string | undefined;
+    if (options.address) {
+      if (!options.address.startsWith("0x") || options.address.length !== 42) {
+        exitWithError("Invalid address format. Must be 0x-prefixed, 42 characters");
+      }
+      const existing = await readExistingMetadata(
+        options.address as `0x${string}`,
+        readOnlyOptions
+      );
+      existingXUsername = existing.x_username;
+      existingBio = existing.bio;
+    }
+
+    const storageArgs = getProfileMetadataStorageArgs({
+      display_name: options.displayName,
+      x_username: existingXUsername,
+      bio: existingBio,
+    });
+    const encoded = encodeTransaction(
+      {
+        to: STORAGE_CONTRACT.address as `0x${string}`,
+        abi: STORAGE_CONTRACT.abi,
+        functionName: "put",
+        args: [storageArgs.bytesKey, storageArgs.topic, storageArgs.bytesValue],
+      },
+      readOnlyOptions.chainId
+    );
+    printJson(encoded);
+    return;
+  }
+
+  // Parse common options (requires private key for transaction submission)
+  const commonOptions = parseCommonOptions(
+    {
+      privateKey: options.privateKey,
+      chainId: options.chainId,
+      rpcUrl: options.rpcUrl,
+    },
+    true // supports --encode-only
+  );
+
+  try {
+    // Create wallet client
+    const account = privateKeyToAccount(commonOptions.privateKey);
+    const rpcUrls = getChainRpcUrls({
+      chainId: commonOptions.chainId,
+      rpcUrl: commonOptions.rpcUrl,
+    });
+
+    const client = createWalletClient({
+      account,
+      chain: base,
+      transport: http(rpcUrls[0]),
+    }).extend(publicActions);
+
+    console.log(chalk.blue(`Setting display name...`));
+    console.log(chalk.gray(`   Display Name: ${options.displayName}`));
+    console.log(chalk.gray(`   Address: ${account.address}`));
+
+    // Read existing metadata to preserve x_username and bio
+    const existing = await readExistingMetadata(account.address, readOnlyOptions);
+    if (existing.x_username) {
+      console.log(chalk.gray(`   Preserving existing X username`));
+    }
+    if (existing.bio) {
+      console.log(chalk.gray(`   Preserving existing bio`));
+    }
+
+    // Get storage args with merged metadata
+    const storageArgs = getProfileMetadataStorageArgs({
+      display_name: options.displayName,
+      x_username: existing.x_username,
+      bio: existing.bio,
+    });
+
+    // Submit transaction
+    const hash = await client.writeContract({
+      address: STORAGE_CONTRACT.address as `0x${string}`,
+      abi: STORAGE_CONTRACT.abi,
+      functionName: "put",
+      args: [storageArgs.bytesKey, storageArgs.topic, storageArgs.bytesValue],
+    });
+
+    console.log(chalk.blue(`Waiting for confirmation...`));
+
+    // Wait for transaction
+    const receipt = await client.waitForTransactionReceipt({ hash });
+
+    if (receipt.status === "success") {
+      console.log(
+        chalk.green(
+          `\nDisplay name updated successfully!\n  Transaction: ${hash}\n  Display Name: ${options.displayName}`
+        )
+      );
+    } else {
+      exitWithError(`Transaction failed: ${hash}`);
+    }
+  } catch (error) {
+    exitWithError(
+      `Failed to set display name: ${
+        error instanceof Error ? error.message : String(error)
+      }`
+    );
+  }
+}
+
+/**
  * Register the profile command group
  */
 export function registerProfileCommand(program: Command): void {
   const profileCmd = program
     .command("profile")
-    .description("Manage user profile (picture, X username, bio)");
+    .description("Manage user profile (display name, picture, X username, bio)");
 
   // profile get --address <addr>
   profileCmd
@@ -625,5 +787,32 @@ export function registerProfileCommand(program: Command): void {
     )
     .action(async (options) => {
       await executeProfileSetBio(options);
+    });
+
+  // profile set-display-name --name <name>
+  profileCmd
+    .command("set-display-name")
+    .description("Set profile display name")
+    .requiredOption("--name <name>", "Display name")
+    .option(
+      "--chain-id <id>",
+      "Chain ID (default: 8453 for Base)",
+      (value) => parseInt(value, 10)
+    )
+    .option("--rpc-url <url>", "Custom RPC URL")
+    .option("--private-key <key>", "Private key (0x-prefixed)")
+    .option(
+      "--encode-only",
+      "Output transaction data as JSON instead of executing"
+    )
+    .option(
+      "--address <addr>",
+      "Address to preserve existing metadata for (used with --encode-only)"
+    )
+    .action(async (options) => {
+      await executeProfileSetDisplayName({
+        ...options,
+        displayName: options.name,
+      });
     });
 }

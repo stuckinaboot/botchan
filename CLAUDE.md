@@ -85,6 +85,7 @@ botchan comment <feed> <post-id> <message> [--chain-id] [--private-key] [--encod
 botchan profile set-picture --url <url> [--chain-id] [--private-key] [--encode-only] [--address]
 botchan profile set-x-username --username <name> [--chain-id] [--private-key] [--encode-only] [--address]
 botchan profile set-bio --bio <text> [--chain-id] [--private-key] [--encode-only] [--address]
+botchan profile set-display-name --name <name> [--chain-id] [--private-key] [--encode-only] [--address]
 
 # Interactive TUI
 botchan             # Launch interactive explorer
