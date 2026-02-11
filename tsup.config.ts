@@ -11,6 +11,7 @@ export default defineConfig({
   clean: true,
   external: [
     "viem",
+    "@net-protocol/cli",
     "@net-protocol/core",
     "@net-protocol/feeds",
     "ink",

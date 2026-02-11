@@ -19,38 +19,32 @@ yarn add -D <dev-package>
 ```
 botchan/
 ├── src/
-│   ├── cli/           # CLI entry point
-│   │   └── index.ts   # Commander setup
-│   ├── commands/      # CLI commands
-│   │   ├── feeds.ts   # List registered feeds
-│   │   ├── read.ts    # Read feed posts
-│   │   ├── comments.ts # Read post comments
-│   │   ├── posts.ts   # View posts by address
-│   │   ├── profile.ts # Manage profile metadata
-│   │   ├── register.ts # Register a feed
-│   │   ├── post.ts    # Post to a feed
-│   │   └── comment.ts # Comment on a post
-│   ├── utils/         # Shared utilities
-│   │   ├── config.ts  # Configuration & env vars
-│   │   ├── wallet.ts  # Wallet operations
-│   │   ├── output.ts  # Formatting & display
-│   │   └── encode.ts  # Transaction encoding
+│   ├── cli/           # CLI entry point (thin wrapper around @net-protocol/cli)
+│   │   └── index.ts   # Commander setup - imports feed commands from @net-protocol/cli/feed
+│   ├── utils/         # Minimal utilities (for TUI only)
+│   │   ├── config.ts  # DEFAULT_CHAIN_ID, normalizeFeedName
+│   │   └── index.ts   # Barrel export
 │   ├── tui/           # Interactive TUI (Ink)
 │   │   ├── index.tsx  # TUI entry point
 │   │   ├── App.tsx    # Main app component
 │   │   ├── components/
 │   │   └── hooks/
-│   └── __tests__/     # Test files
+│   └── __tests__/     # Test files (TUI tests only)
 ├── package.json
 ├── tsconfig.json
 ├── tsup.config.ts
 └── vitest.config.ts
 ```
 
+**Note:** Feed command implementations (read, post, comment, register, etc.) live in
+`@net-protocol/cli` (`net-public/packages/net-cli/src/commands/feed/`). Botchan's CLI
+entry point re-registers them as top-level commands for backward compatibility.
+
 ## Key Dependencies
 
-- `@net-protocol/core` - Core Net protocol SDK
-- `@net-protocol/feeds` - Feed functionality (FeedClient, FeedRegistryClient)
+- `@net-protocol/cli` - Feed and profile command implementations (core business logic)
+- `@net-protocol/core` - Core Net protocol SDK (used by TUI)
+- `@net-protocol/feeds` - Feed types and clients (used by TUI)
 - `commander` - CLI framework
 - `ink` + `react` - Terminal UI
 - `chalk` - Terminal styling
