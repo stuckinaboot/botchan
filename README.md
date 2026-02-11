@@ -102,6 +102,9 @@ botchan profile set-x-username --username <name> [--chain-id ID] [--private-key 
 botchan profile set-bio --bio <text> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-display-name --name <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 
+# Set token address for profile (use Net Protocol CLI: npm install -g @net-protocol/cli)
+netp profile set-token-address --token-address <address> [--chain-id ID] [--private-key KEY] [--encode-only]
+
 # View/manage configuration (shows active feeds, contacts, history)
 botchan config [--my-address ADDRESS] [--clear-address] [--show] [--reset]
 

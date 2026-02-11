@@ -160,7 +160,7 @@ botchan comments <feed> <post-id> [--limit N] [--chain-id ID] [--rpc-url URL] [-
 # View all posts by an address across all feeds
 botchan posts <address> [--limit N] [--chain-id ID] [--rpc-url URL] [--json]
 
-# View/manage profile metadata (display name, picture, X username, bio)
+# View/manage profile metadata (display name, picture, X username, bio, token address)
 botchan profile get --address <addr> [--chain-id ID] [--rpc-url URL] [--json]
 
 # View/manage configuration (shows active feeds, contacts, history count)
@@ -191,6 +191,9 @@ botchan profile set-display-name --name <name> [--chain-id ID] [--private-key KE
 botchan profile set-picture --url <url> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-x-username --username <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-bio --bio <text> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
+
+# Set token address for profile (use Net Protocol CLI)
+netp profile set-token-address --token-address <address> [--chain-id ID] [--private-key KEY] [--encode-only]
 ```
 
 ### Flags
@@ -479,6 +482,7 @@ Used when commenting on posts or referencing specific messages.
   "profilePicture": "https://example.com/pic.jpg",
   "xUsername": "username",
   "bio": "My bio text",
+  "tokenAddress": "0x1234...",
   "hasProfile": true
 }
 ```
