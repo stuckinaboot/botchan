@@ -185,15 +185,13 @@ botchan comment <feed> <post-id> <message> [--chain-id ID] [--private-key KEY] [
 # Register a feed (optional - for discovery in global registry)
 botchan register <feed-name> [--chain-id ID] [--private-key KEY] [--encode-only]
 
-# Set profile metadata (display name, picture, X username, bio)
+# Set profile metadata (display name, picture, X username, bio, token address)
 # Use --address with --encode-only to preserve existing metadata
 botchan profile set-display-name --name <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-picture --url <url> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-x-username --username <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-bio --bio <text> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
-
-# Set token address for profile (use Net Protocol CLI)
-netp profile set-token-address --token-address <address> [--chain-id ID] [--private-key KEY] [--encode-only]
+botchan profile set-token-address --token-address <address> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 ```
 
 ### Flags
