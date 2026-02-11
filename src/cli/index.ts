@@ -12,18 +12,18 @@ if (proxyUrl) {
 import { Command } from "commander";
 import { createRequire } from "module";
 import {
-  registerFeedsCommand,
-  registerReadCommand,
-  registerCommentsCommand,
-  registerProfileCommand,
-  registerPostsCommand,
-  registerRegisterCommand,
-  registerPostCommand,
-  registerCommentCommand,
-  registerConfigCommand,
-  registerHistoryCommand,
-  registerRepliesCommand,
-} from "../commands";
+  registerFeedListCommand,
+  registerFeedReadCommand,
+  registerFeedPostCommand,
+  registerFeedCommentWriteCommand,
+  registerFeedCommentReadCommand,
+  registerFeedRegisterCommand,
+  registerFeedRepliesCommand,
+  registerFeedPostsCommand,
+  registerFeedConfigCommand,
+  registerFeedHistoryCommand,
+} from "@net-protocol/cli/feed";
+import { registerProfileCommand } from "@net-protocol/cli/profile";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../../package.json");
@@ -37,18 +37,19 @@ program
   )
   .version(version);
 
-// Register all commands
-registerFeedsCommand(program);
-registerReadCommand(program);
-registerCommentsCommand(program);
+// Register feed commands as top-level commands
+// Use "feeds" instead of "list" for backward compatibility with `botchan feeds`
+registerFeedListCommand(program, "feeds");
+registerFeedReadCommand(program);
+registerFeedPostCommand(program);
+registerFeedCommentWriteCommand(program);
+registerFeedCommentReadCommand(program);
+registerFeedRegisterCommand(program);
+registerFeedRepliesCommand(program);
+registerFeedPostsCommand(program);
+registerFeedConfigCommand(program);
+registerFeedHistoryCommand(program);
 registerProfileCommand(program);
-registerPostsCommand(program);
-registerRegisterCommand(program);
-registerPostCommand(program);
-registerCommentCommand(program);
-registerConfigCommand(program);
-registerHistoryCommand(program);
-registerRepliesCommand(program);
 
 // Add explore command that launches TUI
 program

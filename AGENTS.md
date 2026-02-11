@@ -17,27 +17,22 @@ Before contributing, understand how botchan is used. See [SKILL.md](./SKILL.md) 
 ```
 botchan/
 ├── src/
-│   ├── cli/           # CLI entry point (Commander setup)
-│   ├── commands/      # CLI commands
-│   │   ├── feeds.ts   # List registered feeds
-│   │   ├── read.ts    # Read feed posts
-│   │   ├── comments.ts # Read post comments
-│   │   ├── profile.ts # View address activity
-│   │   ├── register.ts # Register a feed
-│   │   ├── post.ts    # Post to a feed
-│   │   └── comment.ts # Comment on a post
-│   ├── utils/         # Shared utilities
-│   │   ├── config.ts  # Configuration & env vars
-│   │   ├── wallet.ts  # Wallet operations
-│   │   ├── output.ts  # Formatting & display
-│   │   └── encode.ts  # Transaction encoding
+│   ├── cli/           # CLI entry point (thin wrapper around @net-protocol/cli)
+│   │   └── index.ts   # Imports feed commands from @net-protocol/cli/feed
+│   ├── utils/         # Minimal utilities (for TUI only)
+│   │   ├── config.ts  # DEFAULT_CHAIN_ID, normalizeFeedName
+│   │   └── index.ts   # Barrel export
 │   ├── tui/           # Interactive TUI (Ink + React)
-│   └── __tests__/     # Test files
+│   └── __tests__/     # Test files (TUI tests only)
 ├── SKILL.md           # Complete CLI reference (skills.sh compatible)
 ├── package.json
 ├── tsconfig.json
 └── tsup.config.ts
 ```
+
+**Note:** Feed command implementations live in `@net-protocol/cli`
+(`net-public/packages/net-cli/src/commands/feed/`). Botchan re-registers
+them as top-level commands for backward compatibility.
 
 ## Development
 
@@ -63,8 +58,9 @@ yarn test
 
 ## Key Dependencies
 
-- `@net-protocol/core` - Core Net protocol SDK
-- `@net-protocol/feeds` - Feed functionality (FeedClient, FeedRegistryClient)
+- `@net-protocol/cli` - Feed and profile command implementations (core business logic)
+- `@net-protocol/core` - Core Net protocol SDK (used by TUI)
+- `@net-protocol/feeds` - Feed types and clients (used by TUI)
 - `commander` - CLI framework
 - `ink` + `react` - Terminal UI
 - `viem` - Ethereum utilities
@@ -139,11 +135,13 @@ Also supports `NET_PRIVATE_KEY`, `NET_CHAIN_ID`, and `NET_RPC_URL`.
 
 ## Adding a New Command
 
-1. Create a new file in `src/commands/`
-2. Use the pattern from existing commands (e.g., `read.ts`)
-3. Register it in `src/cli/index.ts`
-4. Add tests in `src/__tests__/`
-5. Update `SKILL.md` with usage documentation
+Feed commands are now maintained in `@net-protocol/cli` (net-public repo):
+
+1. Add the command in `net-public/packages/net-cli/src/commands/feed/`
+2. Export it from `net-public/packages/net-cli/src/commands/feed/index.ts`
+3. Register it in botchan's `src/cli/index.ts`
+4. Add tests in `net-public/packages/net-cli/src/__tests__/commands/feed/`
+5. Update both `SKILL.md` files with usage documentation
 
 ## Testing
 
