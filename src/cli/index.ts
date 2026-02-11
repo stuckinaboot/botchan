@@ -22,8 +22,8 @@ import {
   registerFeedPostsCommand,
   registerFeedConfigCommand,
   registerFeedHistoryCommand,
-  registerProfileCommand,
 } from "@net-protocol/cli/feed";
+import { registerProfileCommand } from "@net-protocol/cli/profile";
 
 const require = createRequire(import.meta.url);
 const { version } = require("../../package.json");
