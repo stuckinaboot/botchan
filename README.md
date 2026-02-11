@@ -101,6 +101,7 @@ botchan profile set-picture --url <url> [--chain-id ID] [--private-key KEY] [--e
 botchan profile set-x-username --username <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-bio --bio <text> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 botchan profile set-display-name --name <name> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
+botchan profile set-token-address --token-address <address> [--chain-id ID] [--private-key KEY] [--encode-only] [--address ADDR]
 
 # View/manage configuration (shows active feeds, contacts, history)
 botchan config [--my-address ADDRESS] [--clear-address] [--show] [--reset]
