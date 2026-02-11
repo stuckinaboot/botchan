@@ -308,10 +308,10 @@
     "@opensea/seaport-js" "^4.0.4"
     viem "^2.31.4"
 
-"@net-protocol/cli@^0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@net-protocol/cli/-/cli-0.1.15.tgz#70aa9cb33fe29ce3ff596803bad7a83aee76a06b"
-  integrity sha512-LIXK2dtrFAnXVHoSWRg0/KCw3mDcwdxyo5qlIf4DfoblP35LmlRUyNfiPxoAY7n5Iuak5Zzl2pv5e00gInOn9g==
+"@net-protocol/cli@^0.1.17":
+  version "0.1.17"
+  resolved "https://registry.yarnpkg.com/@net-protocol/cli/-/cli-0.1.17.tgz#7a32ef89a43b07ac1ce842e2fd592f0f3f354e1d"
+  integrity sha512-6ateWrrQEXLODKD+/s5zRop75mvr/6H55usKa4rYTshH0p9tUu5e2Wfiqdqt+gCwvomGJ7W78HsqIBijg6/I8Q==
   dependencies:
     "@net-protocol/bazaar" "^0.1.12"
     "@net-protocol/core" "^0.1.8"
